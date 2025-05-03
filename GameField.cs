@@ -26,9 +26,14 @@ class GameField
         public string Name;
         public int Throws;
         public FieldNode Position;
+
+        public Player(string name)
+        {
+            Name = name;
+        }
     }
 
-    public GameField(int size)
+    public GameField(int size, string player1Name, string player2Name)
     {
         for (int i = 0; i < size; i++)
         {
@@ -54,6 +59,12 @@ class GameField
                 }
             }
         }
+
+        Player player1 = new Player(player1Name);
+        Player player2 = new Player(player2Name);
+
+        player1.Position = first;
+        player2.Position = first;
     }
 
     FieldNode first = null;
@@ -72,7 +83,7 @@ class GameField
 
         if (player.Position == last)    // Wincondition
         {
-            return true;    
+            return true;
         }
 
         return false;
