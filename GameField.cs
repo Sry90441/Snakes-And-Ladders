@@ -33,6 +33,9 @@ class GameField
         }
     }
 
+    public Player Player1 { get; private set; }
+    public Player Player2 { get; private set; }
+
     public GameField(int size, string player1Name, string player2Name)
     {
         for (int i = 0; i < size; i++)

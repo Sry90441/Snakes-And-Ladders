@@ -17,17 +17,5 @@ class Program
         string player2Name = "Spongebob";
 
         GameField gamefield = new GameField(size, player1Name, player2Name);
-
-
-    }
-
-    public static int RollDice()
-    {
-        Random rnd = new Random();
-
-        int dicethrow = rnd.Next(1,7);
-        //System.Console.WriteLine(dicethrow);
-
-        return dicethrow;
     }
 }
