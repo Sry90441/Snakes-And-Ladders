@@ -47,9 +47,21 @@ class GamePlay
         }
         return dice; 
     }
-    public void MoveForward(GameField.Player player, int dicethrow )
+    public GameField.Player MoveForward(GameField.Player player, int dicethrow )
     {
-        GameField.Player.Throws
+        for(int i = 0; i < dicethrow; i++)
+        {
+            player.Position = player.Position.Next;
+        }
+        return player;
     }
+    // Regel für Spielende
+    //~> Passende Zahl für "Einamrsch" in Zielfeld 
+    
+    // Verteilung schlangen und Leitern ~> zufällig 
+    // !!! ABER keine Schlangen in erster reihe 
+    // + Schlangen und Leitern Anzahl nicht mehr unterschied als 3
+    // ==> while(anz - anz > 3 || 4)
 
+    
 }

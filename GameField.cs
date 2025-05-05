@@ -63,6 +63,8 @@ class GameField
             }
         }
 
+
+
         Player player1 = new Player(player1Name);
         Player player2 = new Player(player2Name);
 
@@ -73,23 +75,9 @@ class GameField
     FieldNode first = null;
     FieldNode last = null;
 
-    public bool PlayerTurn(Player player, int eyes)
+    public GameField.FieldNode LLostast
     {
-        FieldNode current = player.Position;
-
-        for (int i = 0; i < eyes; i++)
-        {
-            current = current.Next;
-        }
-
-        player.Position = current;
-
-        if (player.Position == last)    // Wincondition
-        {
-            return true;
-        }
-
-        return false;
+        get { return last; }
     }
 
 }
