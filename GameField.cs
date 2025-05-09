@@ -56,11 +56,10 @@ class GameField
                 last = newFieldNode;
             }
         }
-        Player player1 = new Player(player1Name);
-        Player player2 = new Player(player2Name);
-        player1.Position = first;
-        player2.Position = first;
-        EelOrEscalate(size);
+            Player1 = new Player(player1Name);
+            Player2 = new Player(player2Name);
+            Player1.Position = first;
+            Player2.Position = first;
     }
     FieldNode first = null;
     FieldNode last = null;
