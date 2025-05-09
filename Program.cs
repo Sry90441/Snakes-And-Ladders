@@ -12,7 +12,7 @@ class Program
 
         System.Console.Write("Player 1 name: ");
         System.Console.Write("Player 2 name:");
-
+        
         string player1Name = "Patrik";
         string player2Name = "Spongebob";
 

@@ -4,18 +4,13 @@ namespace Aale_und_Rolltreppen;
 class GamePlay
 {
     GameField _gameField;
-    GameField.Player _player1;
-    //GameField.Player _player2;
     int _round; 
     bool _dice_system_self;  
 
-
-    public GamePlay(GameField gameField, GameField.Player player1 /*, gameField.Player player2*/ )
+    public GamePlay(GameField gameField)
     {
         _round = 0;
         _gameField = gameField;
-        _player1 = player1;     
-        //_player2 = player2;
     }
     public int DiceThrow()
     {
@@ -55,13 +50,33 @@ class GamePlay
         }
         return player;
     }
-    // Regel für Spielende
-    //~> Passende Zahl für "Einamrsch" in Zielfeld 
-    
-    // Verteilung schlangen und Leitern ~> zufällig 
-    // !!! ABER keine Schlangen in erster reihe 
-    // + Schlangen und Leitern Anzahl nicht mehr unterschied als 3
-    // ==> while(anz - anz > 3 || 4)
-
+    public GameField.Player Eal_orLadder(GameField.Player player)
+    { 
+        if(player.Position.Type == Type.Escalator) //<~ fuck your mom
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                player.Position = player.Position.Next;
+            }
+            
+        }
+        else if(player.Position.Type == Type.Eel)
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                player.Position = player.Position.Previous;
+            }
+        }
+        return player;
+    }
+    public bool You_Win_Questionmark(GameField.Player player)
+    {
+        
+        if(player.Position == GameField.FieldNode.)
+        {
+            return true; 
+        }
+        return false;
+    }
     
 }
