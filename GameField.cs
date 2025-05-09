@@ -74,8 +74,8 @@ class GameField
         int random_add_min = rnd.Next(4);
         int decider = rnd.Next(2);
         int amount_E_E = rnd.Next(FieldSize/4-random_minuss);
-        int amount_Eal = 0;
-        int amount_Escalator = 0;
+        int amount_Eal;
+        int amount_Escalator;
         if(decider == 1)
         {
             amount_Eal = amount_E_E / 2 + random_add_min;
@@ -86,30 +86,37 @@ class GameField
             amount_Eal = amount_E_E / 2 - random_add_min;
             amount_Escalator = amount_E_E / 2 + random_add_min;
         }
-        while(amount_Eal > 0 && amount_Escalator > 0)
-        {
-            for(int i = 0; i < FieldSize; i++ )
-            { 
-                for(int j = 0; j < Math.Sqrt(FieldSize); j++)
-                {
-                    bool fieldset = false;
-                    FieldNode currentNode = GetNodeAt(i);
-                    if(i > Math.Sqrt(FieldSize) && currentNode.Type == Type.Field && fieldset == false)
-                    {
-                        currentNode.Type = Type.Eel;
-                        amount_Eal--;
+    int gridSize = (int)Math.Sqrt(FieldSize);
 
-                    }
-                    else if(i > Math.Sqrt(FieldSize) && currentNode.Type == Type.Field && fieldset == false)
-                    {
-                        currentNode.Type = Type.Escalator;
-                        amount_Escalator--;
-                    }
+    for (int i = 0; i < gridSize; i++)
+    {
+        for (int j = 0; j < gridSize; j++)
+        {
+            int index = i * gridSize + j;
+            FieldNode currentNode = GetNodeAt(index);
+
+            if (currentNode.Type == Type.Field)
+            {
+                if (i != 0 && amount_Eal > 0)
+                {
+                    currentNode.Type = Type.Eel;
+                    amount_Eal--;
                 }
-                i = i + Convert.ToInt32(Math.Sqrt(FieldSize));
+                else if (i != gridSize - 1 && amount_Escalator > 0)
+                {
+                    currentNode.Type = Type.Escalator;
+                    amount_Escalator--;
+                }
             }
+
+            if (amount_Eal <= 0 && amount_Escalator <= 0)
+                break;
         }
+
+        if (amount_Eal <= 0 && amount_Escalator <= 0)
+            break;
     }
+}
 
     private FieldNode GetNodeAt(int index)
     {

@@ -14,6 +14,7 @@ class Program
         string player1Name = "Patrik";
         string player2Name = "Spongebob";
         GameField gamefield = new GameField(size, player1Name, player2Name);
+        gamefield.EelOrEscalate(size);
         bool gameEnd = false;
         GamePlay gamePlay = new GamePlay(gamefield);
         while(gameEnd == false)

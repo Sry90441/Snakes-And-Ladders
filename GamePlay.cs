@@ -50,8 +50,8 @@ class GamePlay
         for(int i = 0; i < dicethrow; i++)
         {
             player.Position = player.Position.Next;
-            player.Throws++;
         }
+        player.Throws++;
         System.Console.WriteLine($"to position {player.Position}.");
         return player;
     }
@@ -81,7 +81,7 @@ class GamePlay
     }
     public bool You_Win_Questionmark(GameField.Player player)
     {
-        if (player.Position == _gameField.GetLast)
+        if (player.Position == _gameField.GetLast || player.Position == null)
         {
             System.Console.WriteLine("You've won!");
             return true; 
