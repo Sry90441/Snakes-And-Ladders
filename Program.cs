@@ -17,6 +17,7 @@ class Program
         gamefield.EelOrEscalate(size);
         bool gameEnd = false;
         GamePlay gamePlay = new GamePlay(gamefield);
+
         while(gameEnd == false)
         {
             GameField.Player currentPlayer;
@@ -28,12 +29,16 @@ class Program
             {
                 currentPlayer = gamefield.Player1;
             }
-            int dice = gamePlay.DiceThrow();
-            gamePlay.MoveForward(currentPlayer, dice);
+            int dice = gamePlay.DiceThrow(currentPlayer);
+            gamePlay.MoveForward(currentPlayer, dice, gamefield);
             gamePlay.Eal_orLadder(currentPlayer);
             gameEnd = gamePlay.You_Win_Questionmark(currentPlayer);
             gamePlay.Round++;
         }
 
+        System.Console.WriteLine("\n--- Statistics ---");
+        System.Console.WriteLine($"Overall thrown dice: {gamefield.Player1.Throws + gamefield.Player2.Throws}");
+        System.Console.WriteLine($"{player1Name} - thrown dice: {gamefield.Player1.Throws}");
+        System.Console.WriteLine($"{player2Name} - thrown dice: {gamefield.Player2.Throws}");
     }
 }

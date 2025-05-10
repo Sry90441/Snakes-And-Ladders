@@ -17,11 +17,12 @@ class GameField
         public FieldNode Next { get; set; }
         public FieldNode Previous { get; set; }
         
-        public FieldNode(FieldNode next, FieldNode previous, Type type = Type.Field)
+        public FieldNode(FieldNode next, FieldNode previous, Type type = Type.Field, bool playerOnNode = false)
         {
             Type = type;
             Next = next;
             Previous = previous;
+            PlayerOnNode = playerOnNode;
         }
     }
     internal class Player
@@ -66,6 +67,31 @@ class GameField
     public GameField.FieldNode GetLast
     {
         get { return last; }
+    }
+
+    public void FieldNodeAdd()  // adds 3 fieldnodes at the end
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            FieldNode newFieldNode = new FieldNode(null, null);
+
+            last.Next = newFieldNode;
+            newFieldNode.Previous = last;
+            last = newFieldNode;
+        }
+    }
+
+    public void FieldNodeAddCurrentPosition(Player player) // adding 5 fieldnodes behind the current player position
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            FieldNode newFieldNode = new FieldNode(null, null);
+           
+           player.Position.Previous = newFieldNode;
+           newFieldNode.Previous = player.Position.Previous;
+           player.Position.Previous.Next = newFieldNode;
+           newFieldNode.Next = player.Position;
+        }
     }
     public void EelOrEscalate(int FieldSize)
     {
