@@ -1,26 +1,29 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Transactions;
-
+public enum Type 
+{ 
+    Eel,
+    Escalator,
+    Field,
+}
 class GameField
 {
     internal class FieldNode
     {
-        public bool Eel { get; set; }
-        public bool Escalator { get; set; }
+        public Type Type {get; set; }
         public bool PlayerOnNode { get; set; }
         public FieldNode Next { get; set; }
         public FieldNode Previous { get; set; }
-
-        public FieldNode(bool eel, bool escalator, FieldNode next, FieldNode previous)
+        
+        public FieldNode(FieldNode next, FieldNode previous, Type type = Type.Field)
         {
-            Eel = eel;
-            Escalator = escalator;
+            Type = type;
             Next = next;
             Previous = previous;
         }
-
     }
-
     internal class Player
     {
         public string Name;
@@ -40,7 +43,7 @@ class GameField
     {
         for (int i = 0; i < size; i++)
         {
-            FieldNode newFieldNode = new FieldNode(false, false, null, null);
+            FieldNode newFieldNode = new FieldNode(null, null);
 
             if (i == 0)
             {
@@ -51,45 +54,80 @@ class GameField
                 last.Next = newFieldNode;
                 newFieldNode.Previous = last;
                 last = newFieldNode;
-
-                if (i % 5 == 0)
-                {
-                    newFieldNode.Eel = true;
-                }
-                if (i % 8 == 0)
-                {
-                    newFieldNode.Escalator = true;
-                }
             }
         }
-
-        Player player1 = new Player(player1Name);
-        Player player2 = new Player(player2Name);
-
-        player1.Position = first;
-        player2.Position = first;
+            Player1 = new Player(player1Name);
+            Player2 = new Player(player2Name);
+            Player1.Position = first;
+            Player2.Position = first;
     }
-
     FieldNode first = null;
     FieldNode last = null;
-
-    public bool PlayerTurn(Player player, int eyes)
+    public GameField.FieldNode GetLast
     {
-        FieldNode current = player.Position;
+        get { return last; }
+    }
+    public void EelOrEscalate(int FieldSize)
+    {
+        Random rnd = new Random();
+        int random_minuss = rnd.Next(5);
+        int random_add_min = rnd.Next(4);
+        int decider = rnd.Next(2);
+        int amount_E_E = rnd.Next(FieldSize/4-random_minuss);
+        int amount_Eal;
+        int amount_Escalator;
+        if(decider == 1)
+        {
+            amount_Eal = amount_E_E / 2 + random_add_min;
+            amount_Escalator = amount_E_E / 2 - random_add_min;
+        }
+        else
+        {
+            amount_Eal = amount_E_E / 2 - random_add_min;
+            amount_Escalator = amount_E_E / 2 + random_add_min;
+        }
+    int gridSize = (int)Math.Sqrt(FieldSize);
 
-        for (int i = 0; i < eyes; i++)
+    for (int i = 0; i < gridSize; i++)
+    {
+        for (int j = 0; j < gridSize; j++)
+        {
+            int index = i * gridSize + j;
+            FieldNode currentNode = GetNodeAt(index);
+
+            if (currentNode.Type == Type.Field)
+            {
+                if (i != 0 && amount_Eal > 0)
+                {
+                    currentNode.Type = Type.Eel;
+                    amount_Eal--;
+                }
+                else if (i != gridSize - 1 && amount_Escalator > 0)
+                {
+                    currentNode.Type = Type.Escalator;
+                    amount_Escalator--;
+                }
+            }
+
+            if (amount_Eal <= 0 && amount_Escalator <= 0)
+                break;
+        }
+
+        if (amount_Eal <= 0 && amount_Escalator <= 0)
+            break;
+    }
+}
+
+    private FieldNode GetNodeAt(int index)
+    {
+        FieldNode current = first;
+        int currentIndex = 0;
+
+        while (current != null && currentIndex < index)
         {
             current = current.Next;
+            currentIndex++;
         }
-
-        player.Position = current;
-
-        if (player.Position == last)    // Wincondition
-        {
-            return true;
-        }
-
-        return false;
+        return current;
     }
-
 }
