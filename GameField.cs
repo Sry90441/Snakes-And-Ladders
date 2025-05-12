@@ -30,6 +30,7 @@ class GameField
         public string Name;
         public int Throws;
         public FieldNode Position;
+        public FieldNode LastPosition;
 
         public Player(string name)
         {
@@ -142,16 +143,35 @@ class GameField
             if (amount_Eal <= 0 && amount_Escalator <= 0)
                 break;
         }
+    }
+    public int GetEntireLength(GameField gameField)
+    {
+        int entireLength = 0;
+        GameField.FieldNode currentPos = first;
+        while(currentPos != null)
+        {
+            entireLength++;
+            currentPos = currentPos.Next;
+        }
+        return entireLength;
     }   
-    public FieldNode SearchRandomUnusedNode()
+    public FieldNode SearchRandomUnusedNode(int size)
     {
         FieldNode currentNode = first;
         Random rnd = new Random();
         int count = 0;
         while(currentNode.Type != Type.Field && count != 0)
         {
-            int random_minuss = rnd.Next(100);
-            currentNode = GetNodeAt(random_minuss);
+            int rand = rnd.Next(size);
+            int rand2 = rnd.Next(size);
+            if(rand < rand2)
+            {
+                currentNode = GetNodeAt(rand2, rand);
+            }
+            else
+            {
+            currentNode = GetNodeAt(rand, rand2);
+            }
             if (currentNode.Type == Type.Field)
             {
                 count++;
@@ -163,7 +183,11 @@ class GameField
     {
         FieldNode current = first;
         int currentIndex = 0;
-        
+        while (current != null && currentIndex < startSearch)
+        {
+            current = current.Next;
+            currentIndex++;
+        }
 
         while (current != null && currentIndex < index)
         {

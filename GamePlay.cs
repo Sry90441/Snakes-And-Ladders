@@ -47,6 +47,7 @@ class GamePlay
     }
     public GameField.Player MoveForward(GameField.Player player, int dicethrow, GameField gamefield)
     {
+        player.LastPosition = player.Position;
         if (dicethrow == 1) // Gamefield will be bigger, by 5 nodes at the end
         {
             System.Console.Write(" - adding 5 nodes at the end of the field!");
@@ -118,14 +119,14 @@ class GamePlay
     }
     public GameField.FieldNode EalAndEscelateMover(GameField.Player player, GameField gameField)
     {
-        GameField.FieldNode currentNode = player.Position;
+        GameField.FieldNode currentNode = player.LastPosition;
         GameField.FieldNode newNode;
         Type tempType;
         if(currentNode.Type == Type.Eel || Type.Escalator == currentNode.Type)
         {
             tempType = currentNode.Type;
             currentNode.Type = Type.Field;
-            newNode = gameField.SearchRandomUnusedNode();
+            newNode = gameField.SearchRandomUnusedNode(gameField.GetEntireLength(gameField));
             newNode.Type = tempType;
         }
         else
