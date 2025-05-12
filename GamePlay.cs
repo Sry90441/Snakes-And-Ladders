@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices.Swift;
 using System.Security;
 
@@ -50,12 +51,14 @@ class GamePlay
         {
             System.Console.Write(" - adding 5 nodes at the end of the field!");
             gamefield.FieldNodeAdd();
+
         }
 
         if (dicethrow == 6) // Gamefield will be bigger behind you
         {
             System.Console.Write(" - adding 5 fieldnodes behind your position");
             gamefield.FieldNodeAddCurrentPosition(player);
+
         }
 
         for (int i = 0; i < dicethrow; i++)
@@ -64,6 +67,7 @@ class GamePlay
             if (player.Position.Next != null)   // so that you cant move out of the field at the end
             {
                 player.Position = player.Position.Next;
+
             }
         }
 
@@ -112,5 +116,27 @@ class GamePlay
         }
         return false;
     }
-
+    public GameField.FieldNode EalAndEscelateMover(GameField.Player player, GameField gameField)
+    {
+        GameField.FieldNode currentNode = player.Position;
+        GameField.FieldNode newNode;
+        Type tempType;
+        if(currentNode.Type == Type.Eel || Type.Escalator == currentNode.Type)
+        {
+            tempType = currentNode.Type;
+            currentNode.Type = Type.Field;
+            newNode = gameField.SearchRandomUnusedNode();
+            newNode.Type = tempType;
+        }
+        else
+        {
+            newNode = currentNode;
+        }
+        return newNode;
+    }
 }
+
+/*
+    Für Player: 
+    → Last Poition if ladder / snake
+*/

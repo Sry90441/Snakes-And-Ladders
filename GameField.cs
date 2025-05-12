@@ -112,42 +112,58 @@ class GameField
             amount_Eal = amount_E_E / 2 - random_add_min;
             amount_Escalator = amount_E_E / 2 + random_add_min;
         }
-    int gridSize = (int)Math.Sqrt(FieldSize);
+        int gridSize = (int)Math.Sqrt(FieldSize);
 
-    for (int i = 0; i < gridSize; i++)
-    {
-        for (int j = 0; j < gridSize; j++)
+        for (int i = 0; i < gridSize; i++)
         {
-            int index = i * gridSize + j;
-            FieldNode currentNode = GetNodeAt(index);
-
-            if (currentNode.Type == Type.Field)
+            for (int j = 0; j < gridSize; j++)
             {
-                if (i != 0 && amount_Eal > 0)
+                int index = i * gridSize + j;
+                FieldNode currentNode = GetNodeAt(index);
+
+                if (currentNode.Type == Type.Field)
                 {
-                    currentNode.Type = Type.Eel;
-                    amount_Eal--;
+                    if (i != 0 && amount_Eal > 0)
+                    {
+                        currentNode.Type = Type.Eel;
+                        amount_Eal--;
+                    }
+                    else if (i != gridSize - 1 && amount_Escalator > 0)
+                    {
+                        currentNode.Type = Type.Escalator;
+                        amount_Escalator--;
+                    }
                 }
-                else if (i != gridSize - 1 && amount_Escalator > 0)
-                {
-                    currentNode.Type = Type.Escalator;
-                    amount_Escalator--;
-                }
+
+                if (amount_Eal <= 0 && amount_Escalator <= 0)
+                    break;
             }
 
             if (amount_Eal <= 0 && amount_Escalator <= 0)
                 break;
         }
-
-        if (amount_Eal <= 0 && amount_Escalator <= 0)
-            break;
+    }   
+    public FieldNode SearchRandomUnusedNode()
+    {
+        FieldNode currentNode = first;
+        Random rnd = new Random();
+        int count = 0;
+        while(currentNode.Type != Type.Field && count != 0)
+        {
+            int random_minuss = rnd.Next(100);
+            currentNode = GetNodeAt(random_minuss);
+            if (currentNode.Type == Type.Field)
+            {
+                count++;
+            }
+        }
+        return currentNode;
     }
-}
-
-    private FieldNode GetNodeAt(int index)
+    private FieldNode GetNodeAt(int index, int startSearch = 0)
     {
         FieldNode current = first;
         int currentIndex = 0;
+        
 
         while (current != null && currentIndex < index)
         {

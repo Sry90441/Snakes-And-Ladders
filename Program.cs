@@ -32,6 +32,7 @@ class Program
             int dice = gamePlay.DiceThrow(currentPlayer);
             gamePlay.MoveForward(currentPlayer, dice, gamefield);
             gamePlay.Eal_orLadder(currentPlayer);
+            gamePlay.EalAndEscelateMover(currentPlayer, gamefield);
             gameEnd = gamePlay.You_Win_Questionmark(currentPlayer);
             gamePlay.Round++;
         }

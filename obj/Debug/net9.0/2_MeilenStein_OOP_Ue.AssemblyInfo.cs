@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("2_MeilenStein_OOP_Ue")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4a968f8ca399326647ea616b28e7e6bb63ff591")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c80c5052f41f6a5052700aa67c93e68a916cc63")]
 [assembly: System.Reflection.AssemblyProductAttribute("2_MeilenStein_OOP_Ue")]
 [assembly: System.Reflection.AssemblyTitleAttribute("2_MeilenStein_OOP_Ue")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
