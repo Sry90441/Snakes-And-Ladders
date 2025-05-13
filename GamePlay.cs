@@ -40,7 +40,7 @@ class GamePlay
         }
         else
         {
-            Console.Write("Gib die geworfene Zahl an: ");
+            Console.Write($"{player.Name}: Gib die geworfene Zahl an: ");
             dice = Convert.ToInt32(Console.ReadLine());
         }
         return dice;
@@ -57,16 +57,21 @@ class GamePlay
 
         if (dicethrow == 6) // Gamefield will be bigger behind you
         {
-            System.Console.Write(" - adding 5 fieldnodes behind your position");
-            gamefield.FieldNodeAddCurrentPosition(player);
-
+            if (gamefield.FieldNodeAddCurrentPosition(player))
+            {
+                System.Console.Write(" - adding 5 fieldnodes behind your position");
+            }
+            else
+            {
+                System.Console.Write("Can't add fieldnodes if Player is on the starting-field");
+            }
         }
 
         for (int i = 0; i < dicethrow; i++)
         {
-            player.Position.PlayerOnNode = false;
             if (player.Position.Next != null)   // so that you cant move out of the field at the end
             {
+                player.Position.PlayerOnNode = false;
                 player.Position = player.Position.Next;
 
             }
@@ -86,11 +91,12 @@ class GamePlay
         System.Console.WriteLine("\n");
         return player;
     }
-    public GameField.Player Eal_orLadder(GameField.Player player)
+    public GameField.Player Eal_orLadder(GameField.Player player, GameField gamefield) // or Wormhole
     {
         if (player.Position.Type == Type.Escalator)
         {
             System.Console.WriteLine("You've landed on an Escalator, moving forward 3 nodes");
+            player.Position.PlayerOnNode = false;
 
             for (int i = 0; i < 3; i++) // move 3 nodes forward
             {
@@ -100,13 +106,63 @@ class GamePlay
         else if (player.Position.Type == Type.Eel)
         {
             System.Console.WriteLine("You've landed on an Eel, falling back 3 nodes");
+            player.Position.PlayerOnNode = false;
 
             for (int i = 0; i < 3; i++) //move 3 nodes back
             {
                 player.Position = player.Position.Previous;
             }
         }
+        else if (player.Position.Type == Type.Wormhole) // wormhole teleports the player back or forwards and a limited amount of fields (random for each encounter)
+        {
+            Random rnd = new Random();
+            int teleport = rnd.Next(1, gamefield.GetEntireLength(gamefield) / 3);
+            int backOrForwad = rnd.Next(0, 2);
+
+            System.Console.Write($"Teleporting {teleport} fieldnodes ");
+            player.Position.PlayerOnNode = false;
+
+            for (int i = 0; i < teleport; i++)
+            {
+                if (backOrForwad == 0)
+                {
+                    if (i == 0)
+                    {
+                        System.Console.WriteLine("back...");
+                    }
+                    if (player.Position.Previous != null)
+                    {
+                        player.Position = player.Position.Previous;
+                    }
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        System.Console.WriteLine("forward...");
+                    }
+                    if (player.Position.Next != null)
+                    {
+                        player.Position = player.Position.Next;
+                    }
+                }
+            }
+        }
         return player;
+    }
+
+    public int MissingEyes(GameField.Player player, GameField gamefield) // calculates how much eyes are missing for reaching the last field and winning
+    {
+        int missingEyes = 0;
+        GameField.FieldNode current = _gameField.GetLast;
+
+        while (current != player.Position)
+        {
+            current = current.Previous;
+            missingEyes++;
+        }
+
+        return missingEyes;
     }
     public bool You_Win_Questionmark(GameField.Player player) // win condition
     {
@@ -117,12 +173,13 @@ class GamePlay
         }
         return false;
     }
+
     public GameField.FieldNode EalAndEscelateMover(GameField.Player player, GameField gameField)
     {
         GameField.FieldNode currentNode = player.LastPosition;
         GameField.FieldNode newNode;
         Type tempType;
-        if(currentNode.Type == Type.Eel || Type.Escalator == currentNode.Type)
+        if (currentNode.Type == Type.Eel || Type.Escalator == currentNode.Type)
         {
             tempType = currentNode.Type;
             currentNode.Type = Type.Field;

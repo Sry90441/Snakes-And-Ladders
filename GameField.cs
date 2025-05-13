@@ -2,21 +2,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Transactions;
-public enum Type 
-{ 
+public enum Type
+{
     Eel,
     Escalator,
     Field,
+    Wormhole,
 }
 class GameField
 {
     internal class FieldNode
     {
-        public Type Type {get; set; }
+        public Type Type { get; set; }
         public bool PlayerOnNode { get; set; }
         public FieldNode Next { get; set; }
         public FieldNode Previous { get; set; }
-        
+
         public FieldNode(FieldNode next, FieldNode previous, Type type = Type.Field, bool playerOnNode = false)
         {
             Type = type;
@@ -31,6 +32,7 @@ class GameField
         public int Throws;
         public FieldNode Position;
         public FieldNode LastPosition;
+        public bool LandedOnWormhole;
 
         public Player(string name)
         {
@@ -58,16 +60,21 @@ class GameField
                 last = newFieldNode;
             }
         }
-            Player1 = new Player(player1Name);
-            Player2 = new Player(player2Name);
-            Player1.Position = first;
-            Player2.Position = first;
+        Player1 = new Player(player1Name);
+        Player2 = new Player(player2Name);
+        Player1.Position = first;
+        Player2.Position = first;
     }
     FieldNode first = null;
     FieldNode last = null;
-    public GameField.FieldNode GetLast
+    public FieldNode GetLast
     {
         get { return last; }
+    }
+
+    public FieldNode First
+    {
+        get { return first; }
     }
 
     public void FieldNodeAdd()  // adds 3 fieldnodes at the end
@@ -82,16 +89,24 @@ class GameField
         }
     }
 
-    public void FieldNodeAddCurrentPosition(Player player) // adding 5 fieldnodes behind the current player position
+    public bool FieldNodeAddCurrentPosition(Player player) // adding 5 fieldnodes behind the current player position
     {
-        for (int i = 0; i < 5; i++)
+        if (player.Position.Previous != null)
         {
-            FieldNode newFieldNode = new FieldNode(null, null);
-           
-           player.Position.Previous = newFieldNode;
-           newFieldNode.Previous = player.Position.Previous;
-           player.Position.Previous.Next = newFieldNode;
-           newFieldNode.Next = player.Position;
+            for (int i = 0; i < 5; i++)
+            {
+                FieldNode newFieldNode = new FieldNode(null, null);
+
+                newFieldNode.Next = player.Position;
+                newFieldNode.Previous = player.Position.Previous;
+                player.Position.Previous.Next = newFieldNode;
+                player.Position.Previous = newFieldNode;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     public void EelOrEscalate(int fieldSize)
@@ -102,6 +117,9 @@ class GameField
         int amount_E_E = Math.Max(1, fieldSize / 4);
         int amount_Eal = rnd.Next(1, amount_E_E);
         int amount_Escalator = amount_E_E - amount_Eal;
+
+        int indexW = rnd.Next(rowSize, fieldSize -1);   // add one wormhole at a random location
+        GetNodeAt(indexW).Type = Type.Wormhole;
 
         int attempts = 0;
         while (amount_Eal > 0 && attempts < fieldSize * 5)
@@ -131,33 +149,34 @@ class GameField
             attempts++;
         }
     }
+
     public int GetEntireLength(GameField gameField)
     {
         int entireLength = 0;
         GameField.FieldNode currentPos = first;
-        while(currentPos != null)
+        while (currentPos != null)
         {
             entireLength++;
             currentPos = currentPos.Next;
         }
         return entireLength;
-    }   
+    }
     public FieldNode SearchRandomUnusedNode(int size)
     {
         FieldNode currentNode = first;
         Random rnd = new Random();
         int count = 0;
-        while(currentNode.Type != Type.Field && count != 0)
+        while (currentNode.Type != Type.Field && count != 0)
         {
             int rand = rnd.Next(size);
             int rand2 = rnd.Next(size);
-            if(rand < rand2)
+            if (rand < rand2)
             {
                 currentNode = GetNodeAt(rand2, rand);
             }
             else
             {
-            currentNode = GetNodeAt(rand, rand2);
+                currentNode = GetNodeAt(rand, rand2);
             }
             if (currentNode.Type == Type.Field)
             {
@@ -166,10 +185,7 @@ class GameField
         }
         return currentNode;
     }
-    public FieldNode First
-    {
-        get {return first; }
-    }
+
     private FieldNode GetNodeAt(int index, int startSearch = 0)
     {
         FieldNode current = first;
