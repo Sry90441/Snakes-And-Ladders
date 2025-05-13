@@ -6,6 +6,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        
         Console.WriteLine("Eels and Escalators");
         System.Console.WriteLine("How big should the GameField be?");
         int size = Convert.ToInt16(Console.ReadLine());
@@ -17,7 +18,10 @@ class Program
         gamefield.EelOrEscalate(size);
         bool gameEnd = false;
         GamePlay gamePlay = new GamePlay(gamefield);
-
+        Render map = new Render(gamefield);
+        Console.WriteLine();
+        map.PrintTheField(gamefield, gamefield.Player1, gamefield.Player2);
+        
         while(gameEnd == false)
         {
             GameField.Player currentPlayer;
@@ -35,6 +39,7 @@ class Program
             gamePlay.EalAndEscelateMover(currentPlayer, gamefield);
             gameEnd = gamePlay.You_Win_Questionmark(currentPlayer);
             gamePlay.Round++;
+            map.PrintTheField(gamefield, gamefield.Player1, gamefield.Player2);
         }
 
         System.Console.WriteLine("\n--- Statistics ---");

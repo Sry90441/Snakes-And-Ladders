@@ -131,7 +131,7 @@ class GamePlay
         }
         else
         {
-            newNode = currentNode;
+            return currentNode;
         }
         return newNode;
     }

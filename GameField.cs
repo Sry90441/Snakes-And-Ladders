@@ -94,54 +94,41 @@ class GameField
            newFieldNode.Next = player.Position;
         }
     }
-    public void EelOrEscalate(int FieldSize)
+    public void EelOrEscalate(int fieldSize)
     {
         Random rnd = new Random();
-        int random_minuss = rnd.Next(5);
-        int random_add_min = rnd.Next(4);
-        int decider = rnd.Next(2);
-        int amount_E_E = rnd.Next(FieldSize/4-random_minuss);
-        int amount_Eal;
-        int amount_Escalator;
-        if(decider == 1)
-        {
-            amount_Eal = amount_E_E / 2 + random_add_min;
-            amount_Escalator = amount_E_E / 2 - random_add_min;
-        }
-        else
-        {
-            amount_Eal = amount_E_E / 2 - random_add_min;
-            amount_Escalator = amount_E_E / 2 + random_add_min;
-        }
-        int gridSize = (int)Math.Sqrt(FieldSize);
+        int rowSize = (int)Math.Sqrt(fieldSize);
 
-        for (int i = 0; i < gridSize; i++)
+        int amount_E_E = Math.Max(1, fieldSize / 4);
+        int amount_Eal = rnd.Next(1, amount_E_E);
+        int amount_Escalator = amount_E_E - amount_Eal;
+
+        int attempts = 0;
+        while (amount_Eal > 0 && attempts < fieldSize * 5)
         {
-            for (int j = 0; j < gridSize; j++)
+            int index = rnd.Next(rowSize, fieldSize - 1); // vermeide erste Reihe und letztes Feld
+            FieldNode candidate = GetNodeAt(index);
+
+            if (candidate.Type == Type.Field)
             {
-                int index = i * gridSize + j;
-                FieldNode currentNode = GetNodeAt(index);
-
-                if (currentNode.Type == Type.Field)
-                {
-                    if (i != 0 && amount_Eal > 0)
-                    {
-                        currentNode.Type = Type.Eel;
-                        amount_Eal--;
-                    }
-                    else if (i != gridSize - 1 && amount_Escalator > 0)
-                    {
-                        currentNode.Type = Type.Escalator;
-                        amount_Escalator--;
-                    }
-                }
-
-                if (amount_Eal <= 0 && amount_Escalator <= 0)
-                    break;
+                candidate.Type = Type.Eel;
+                amount_Eal--;
             }
+            attempts++;
+        }
 
-            if (amount_Eal <= 0 && amount_Escalator <= 0)
-                break;
+        attempts = 0;
+        while (amount_Escalator > 0 && attempts < fieldSize * 5)
+        {
+            int index = rnd.Next(1, fieldSize - rowSize); // vermeide letztes Reihe + Startfeld
+            FieldNode candidate = GetNodeAt(index);
+
+            if (candidate.Type == Type.Field)
+            {
+                candidate.Type = Type.Escalator;
+                amount_Escalator--;
+            }
+            attempts++;
         }
     }
     public int GetEntireLength(GameField gameField)
@@ -178,6 +165,10 @@ class GameField
             }
         }
         return currentNode;
+    }
+    public FieldNode First
+    {
+        get {return first; }
     }
     private FieldNode GetNodeAt(int index, int startSearch = 0)
     {
