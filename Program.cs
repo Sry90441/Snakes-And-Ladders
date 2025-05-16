@@ -6,7 +6,6 @@ class Program
 {
     static void Main(string[] args)
     {
-
         Console.WriteLine("Eels and Escalators");
         System.Console.WriteLine("How big should the GameField be?");
         int size = Convert.ToInt16(Console.ReadLine());
@@ -28,17 +27,14 @@ class Program
             GameField.Player currentPlayer;
             if (gamePlay.Round % 2 == 0)
             {
-                currentPlayer = gamefield.Player2;
+                currentPlayer = gamefield.Player1;
             }
             else
             {
-                currentPlayer = gamefield.Player1;
+                currentPlayer = gamefield.Player2;
             }
-
             int dice = gamePlay.DiceThrow(currentPlayer);
-
             missingEyes = gamePlay.MissingEyes(currentPlayer, gamefield);
-
             if (missingEyes < 6)    // if you're in reach of the last node
             {
                 if (dice > missingEyes) // eyes bigger than distance to last node
@@ -61,14 +57,17 @@ class Program
                 gamePlay.EalAndEscelateMover(currentPlayer, gamefield);
                 gameEnd = gamePlay.You_Win_Questionmark(currentPlayer); // case wormhole or ladder teleports to the last field
             }
-
             gamePlay.Round++;
             map.PrintTheField(gamefield, gamefield.Player1, gamefield.Player2);
+
+
         }
 
         System.Console.WriteLine("\n--- Statistics ---");
         System.Console.WriteLine($"Overall thrown dice: {gamefield.Player1.Throws + gamefield.Player2.Throws}");
         System.Console.WriteLine($"{player1Name} - thrown dice: {gamefield.Player1.Throws}");
         System.Console.WriteLine($"{player2Name} - thrown dice: {gamefield.Player2.Throws}");
+    
+        
     }
 }

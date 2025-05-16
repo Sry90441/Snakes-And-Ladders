@@ -97,7 +97,7 @@ class GamePlay
         {
             System.Console.WriteLine("You've landed on an Escalator, moving forward 3 nodes");
             player.Position.PlayerOnNode = false;
-
+            player.LastPosition = player.Position;
             for (int i = 0; i < 3; i++) // move 3 nodes forward
             {
                 player.Position = player.Position.Next;
@@ -107,7 +107,7 @@ class GamePlay
         {
             System.Console.WriteLine("You've landed on an Eel, falling back 3 nodes");
             player.Position.PlayerOnNode = false;
-
+            player.LastPosition = player.Position;
             for (int i = 0; i < 3; i++) //move 3 nodes back
             {
                 player.Position = player.Position.Previous;
@@ -174,27 +174,17 @@ class GamePlay
         return false;
     }
 
-    public GameField.FieldNode EalAndEscelateMover(GameField.Player player, GameField gameField)
+    public void EalAndEscelateMover(GameField.Player player, GameField gameField)
     {
         GameField.FieldNode currentNode = player.LastPosition;
         GameField.FieldNode newNode;
         Type tempType;
-        if (currentNode.Type == Type.Eel || Type.Escalator == currentNode.Type)
+        if (currentNode.Type != Type.Field)
         {
             tempType = currentNode.Type;
             currentNode.Type = Type.Field;
-            newNode = gameField.SearchRandomUnusedNode(gameField.GetEntireLength(gameField));
-            newNode.Type = tempType;
+            gameField.SearchRandomUnusedNode(gameField.GetEntireLength(gameField)).Type = tempType;
         }
-        else
-        {
-            return currentNode;
-        }
-        return newNode;
     }
-}
 
-/*
-    Für Player: 
-    → Last Poition if ladder / snake
-*/
+}

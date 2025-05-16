@@ -118,7 +118,7 @@ class GameField
         int amount_Eal = rnd.Next(1, amount_E_E);
         int amount_Escalator = amount_E_E - amount_Eal;
 
-        int indexW = rnd.Next(rowSize, fieldSize -1);   // add one wormhole at a random location
+        int indexW = rnd.Next(rowSize, fieldSize - 1);   // add one wormhole at a random location
         GetNodeAt(indexW).Type = Type.Wormhole;
 
         int attempts = 0;
@@ -153,7 +153,7 @@ class GameField
     public int GetEntireLength(GameField gameField)
     {
         int entireLength = 0;
-        GameField.FieldNode currentPos = first;
+        FieldNode currentPos = first;
         while (currentPos != null)
         {
             entireLength++;
@@ -163,29 +163,19 @@ class GameField
     }
     public FieldNode SearchRandomUnusedNode(int size)
     {
-        FieldNode currentNode = first;
         Random rnd = new Random();
-        int count = 0;
-        while (currentNode.Type != Type.Field && count != 0)
+
+        while (true)
         {
-            int rand = rnd.Next(size);
-            int rand2 = rnd.Next(size);
-            if (rand < rand2)
+            int index = rnd.Next(1, size - 1);
+            FieldNode currentNode = GetNodeAt(index);
+
+            if (currentNode != null && currentNode.Type == Type.Field)
             {
-                currentNode = GetNodeAt(rand2, rand);
-            }
-            else
-            {
-                currentNode = GetNodeAt(rand, rand2);
-            }
-            if (currentNode.Type == Type.Field)
-            {
-                count++;
+                return currentNode;
             }
         }
-        return currentNode;
     }
-
     private FieldNode GetNodeAt(int index, int startSearch = 0)
     {
         FieldNode current = first;

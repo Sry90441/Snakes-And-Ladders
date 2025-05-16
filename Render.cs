@@ -11,16 +11,6 @@ class Render
     {
         _gameField = gameField;
     }
-    /*
-    - [] Spielfeld mit Leiter
-    - [] Spielgeld mit SChlange
-    - [] Spielfeld mit spieler
-    - [] Spielfeld mit Leiter und Spieler
-    - [] Spielfeld mit Schlange und Spieler
-    - [] Start 
-    - [] Ende 
-    - [] Loop 
-    */
     public void Checkfornode(GameField.FieldNode currentnode, GameField.Player player1, GameField.Player player2)
     {
         switch (currentnode.Type)
@@ -28,7 +18,7 @@ class Render
             case Type.Eel:
                 if (currentnode == player2.Position && currentnode == player1.Position) 
                 {
-                    Console.Write("[S P1 P2]");
+                    Console.Write("[S P1  P2]");
                 }
                 else if (currentnode == player1.Position)
                 {
@@ -106,15 +96,15 @@ class Render
         int size = gamefield.GetEntireLength(gamefield);
         GameField.FieldNode curNod = gamefield.First;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 1; i < size+1; i++)
         {
-            if (i == 0)
+            if (i == 1)
             {
                 Console.Write("[Start]");
             }
-            else if (i == size - 1)
+            else if (i == size)
             {
-                Console.Write("[End  ]");
+                Console.Write("[ End ]");
             }
             else
             {
